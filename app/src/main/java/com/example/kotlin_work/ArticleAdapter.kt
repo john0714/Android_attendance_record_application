@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 // inflater프로퍼티 생성
-class ArticleAdapter(private val inflater: LayoutInflater): ListAdapter<SecondFragment.Article, ArticleAdapter.ViewHolder>(ArticleAdapter.diffCallback) { // 앞에께 property constructor(인수)
+class ArticleAdapter(private val inflater: LayoutInflater): ListAdapter<MainFragment.Article, ArticleAdapter.ViewHolder>(ArticleAdapter.diffCallback) { // 앞에께 property constructor(인수)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder { // 행 하나의 View를 만들고, ViewHolder의 형태로 해서 반환하게 만듬
         val view = inflater.inflate( // View는 레이아웃 XML경유로 작성하는게 좋으므로 LayoutInflater를 사용해서 만들게 하자
@@ -27,12 +27,12 @@ class ArticleAdapter(private val inflater: LayoutInflater): ListAdapter<SecondFr
     }
 
     companion object {
-        val diffCallback = object: DiffUtil.ItemCallback<SecondFragment.Article>() {
-            override fun areItemsTheSame(oldItem: SecondFragment.Article, newItem: SecondFragment.Article): Boolean {
+        val diffCallback = object: DiffUtil.ItemCallback<MainFragment.Article>() {
+            override fun areItemsTheSame(oldItem: MainFragment.Article, newItem: MainFragment.Article): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: SecondFragment.Article, newItem: SecondFragment.Article): Boolean {
+            override fun areContentsTheSame(oldItem: MainFragment.Article, newItem: MainFragment.Article): Boolean {
                 return oldItem.equals(newItem)
             }
         }

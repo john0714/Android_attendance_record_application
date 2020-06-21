@@ -3,37 +3,102 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/LoginFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/LoginFragment"
+        android:id="@+id/loginFragment"
         android:name="com.example.kotlin_work.LoginFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_login">
 
         <action
-            android:id="@+id/action_LoginFragment_to_MainFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_loginFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.kotlin_work.SecondFragment"
+        android:id="@+id/mainFragment"
+        android:name="com.example.kotlin_work.MainFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_main">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/LoginFragment" />
-        <action
-            android:id="@+id/action_SecondFragment_to_detailFragment"
-            app:destination="@id/detailFragment"
+            android:id="@+id/action_mainFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_mainFragment_to_modifyFragment"
+            app:destination="@id/modifyFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_vacationInformationFragment"
+            app:destination="@id/vacationInformationFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_workInformationFragment"
+            app:destination="@id/workInformationFragment" />
     </fragment>
     <fragment
-        android:id="@+id/detailFragment"
-        android:name="com.example.kotlin_work.DetailFragment"
-        android:label="DetailFragment" />
+        android:id="@+id/modifyFragment"
+        android:name="com.example.kotlin_work.ModifyFragment"
+        android:label="ModifyFragment" >
+        <action
+            android:id="@+id/action_modifyFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_modifyFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_modifyFragment_to_vacationInformationFragment"
+            app:destination="@id/vacationInformationFragment" />
+        <action
+            android:id="@+id/action_modifyFragment_to_workInformationFragment"
+            app:destination="@id/workInformationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/vacationInformationFragment"
+        android:name="com.example.kotlin_work.VacationInformationFragment"
+        android:label="VacationInformationFragment" >
+        <action
+            android:id="@+id/action_vacationInformationFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_vacationInformationFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_vacationInformationFragment_to_workInformationFragment"
+            app:destination="@id/workInformationFragment" />
+        <action
+            android:id="@+id/action_vacationInformationFragment_to_modifyFragment"
+            app:destination="@id/modifyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workInformationFragment"
+        android:name="com.example.kotlin_work.WorkInformationFragment"
+        android:label="WorkInformationFragment" >
+        <action
+            android:id="@+id/action_workInformationFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_workInformationFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_workInformationFragment_to_vacationInformationFragment"
+            app:destination="@id/vacationInformationFragment" />
+        <action
+            android:id="@+id/action_workInformationFragment_to_modifyFragment"
+            app:destination="@id/modifyFragment" />
+    </fragment>
 </navigation>

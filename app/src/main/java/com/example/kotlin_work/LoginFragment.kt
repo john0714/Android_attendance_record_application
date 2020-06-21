@@ -26,7 +26,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<Button>(R.id.button_login).setOnClickListener {
-            findNavController().navigate(R.id.action_LoginFragment_to_MainFragment)
+            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
         }
     }
 }

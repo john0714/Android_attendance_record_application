@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class LoginFragment : Fragment() {
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -19,14 +19,14 @@ class FirstFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_first, container, false)
+        return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.button_third).setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        view.findViewById<Button>(R.id.button_login).setOnClickListener {
+            findNavController().navigate(R.id.action_LoginFragment_to_MainFragment)
         }
     }
 }

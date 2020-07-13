@@ -6,12 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(R.layout.fragment_login) {
+    val vm: LoginViewModel by viewModels()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -26,7 +31,20 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<Button>(R.id.button_login).setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+            val email = view.findViewById<EditText>(R.id.editEmailAddress).text.toString()
+            val password = view.findViewById<EditText>(R.id.editPassword).text.toString()
+
+            vm.login(email, password)
+
+            // findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
         }
+
+        vm.userLiveData.observe(viewLifecycleOwner, Observer {
+            Snackbar.make(
+                requireView(),
+                R.string.done_login,
+                Snackbar.LENGTH_LONG
+            ).show()
+        })
     }
 }

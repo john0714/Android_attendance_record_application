@@ -7,9 +7,33 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
-class LoginViewModel: ViewModel() { // このViewModelを破棄すると、処理がキャンセルされる仕組み
+class LoginViewModel(
+    private val client: OkHttpClient
+): ViewModel() { // このViewModelを破棄すると、処理がキャンセルされる仕組み
     val userLiveData = MutableLiveData<User>()
+    val responseBody = MutableLiveData<String>()
+
+    fun fetch() {
+        viewModelScope.launch {
+            val request = Request.Builder().apply {
+                get()
+                url("https://httpbin.org/get")
+            }.build()
+            val response = withContext(Dispatchers.IO) {
+                client.newCall(request).execute()
+            }
+            if (response.code != 200) {
+                return@launch
+            }
+            val body = withContext(Dispatchers.IO) {
+                response.body?.string() ?: ""
+            }
+            responseBody.value = body
+        }
+    }
 
     fun login(email: String, password: String) { // co-routine
         viewModelScope.launch {

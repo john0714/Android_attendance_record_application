@@ -16,6 +16,7 @@ class LoginViewModel(
     val userLiveData = MutableLiveData<User>()
     val responseBody = MutableLiveData<String>()
 
+    // responseTest
     fun fetch() {
         viewModelScope.launch {
             val request = Request.Builder().apply {

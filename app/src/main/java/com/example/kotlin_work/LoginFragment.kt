@@ -73,6 +73,5 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onStart() {
         super.onStart()
-        viewModel.fetch()
     }
 }

@@ -58,16 +58,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             val password = view.findViewById<EditText>(R.id.editPassword).text.toString()
 
             vm.login(email, password)
-
-            // findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
         }
 
         vm.userLiveData.observe(viewLifecycleOwner, Observer {
-            Snackbar.make(
-                requireView(),
-                R.string.done_login,
-                Snackbar.LENGTH_LONG
-            ).show()
+            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
         })
     }
 

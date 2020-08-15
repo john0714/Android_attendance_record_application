@@ -7,8 +7,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 
 class LoginViewModel(
     private val client: OkHttpClient
@@ -17,29 +21,39 @@ class LoginViewModel(
     val responseBody = MutableLiveData<String>()
 
     // responseTest
-    fun fetch() {
+    private fun fetch(requestBody: RequestBody) {
         viewModelScope.launch {
             val request = Request.Builder().apply {
-                get()
-                url("https://httpbin.org/get")
+                post(requestBody)
+                url("https://us-central1-kotlinproject-33677.cloudfunctions.net/login")
             }.build()
+
             val response = withContext(Dispatchers.IO) {
                 client.newCall(request).execute()
             }
+
             if (response.code != 200) {
                 return@launch
             }
+
             val body = withContext(Dispatchers.IO) {
                 response.body?.string() ?: ""
             }
+
             responseBody.value = body
         }
     }
 
     fun login(email: String, password: String) { // co-routine
         viewModelScope.launch {
-            val token = getToken(email, password)
-            val user = getUser(token)
+            val response = getToken(email, password)
+
+            if (response.code != 200) {
+                return@launch
+            }
+
+            val token = JSONObject(response.body?.string() ?: "")
+            val user = getUser(token.getString("access_token"))
 
             // ここでUIスレッドが実行される
             // setValue()を使っても大丈夫
@@ -47,15 +61,32 @@ class LoginViewModel(
         }
     }
 
+    // firebaseからトークン取得
     private suspend fun getToken(email: String, password: String) = withContext(Dispatchers.IO) {
         println("ログイン処理開始")
-        delay(2000)
-        "access_token0000"
-    }
+        val json = JSONObject()
+        json.put("email", email)
+        json.put("password", password)
+        val body = json.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
 
+        val request = Request.Builder().apply {
+            post(body)
+            url("https://us-central1-kotlinproject-33677.cloudfunctions.net/login")
+        }.build()
+
+        val response = withContext(Dispatchers.IO) {
+            client.newCall(request).execute()
+        }
+
+        response
+    }
+    
+    // token에서 유저정보 취득(원래는 DB에 연결해서 취득해야함)
     private suspend fun getUser(token: String) = withContext(Dispatchers.IO) {
         println("ユーザー情報取得処理の開始")
-        delay(1000)
+
+        println(token)
+        // 元ならここでDBと繋ぎ、ユーザ情報取得
         User(id = "user0001", name = "Sample User")
     }
 }

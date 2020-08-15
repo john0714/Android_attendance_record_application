@@ -61,7 +61,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
 
         vm.userLiveData.observe(viewLifecycleOwner, Observer {
-            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+            if (findNavController().currentDestination?.id == R.id.loginFragment) {
+                findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
+            }
         })
     }
 

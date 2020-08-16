@@ -1,20 +1,25 @@
 package com.example.kotlin_work
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import okhttp3.OkHttpClient
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class MainFragment : Fragment() {
     private lateinit var adapter: ArticleAdapter;
+    private val handler = Handler()
+    val mainVM: MainViewModel by viewModels()
 
     data class Article(val id: Int, val title: String, val body: String)
 
@@ -45,6 +50,11 @@ class MainFragment : Fragment() {
             Navigation.findNavController(it)
                 .navigate(R.id.action_mainFragment_to_workInformationFragment) // 찾은 버튼을 눌렀을때 일어날 action을 지정함 → navigate의 화살표
         }
+
+        // 페이지 이동 - 로그인 화면(로그아웃)
+        view.findViewById<Button>(R.id.button_logout).setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
+        }
         
         // 레이아웃 매니저 세팅
 //        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler) // 리사이클러 뷰를 찾음
@@ -71,9 +81,17 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 페이지 이동 - 로그인 화면(로그아웃)
-        view.findViewById<Button>(R.id.button_logout).setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
-        }
+        val timeTextView = view.findViewById<TextView>(R.id.Time)
+        mainVM.timeLiveData.observe(viewLifecycleOwner, Observer {
+            timeTextView.text = mainVM.timeLiveData.value
+        })
+
+        handler.post(object : Runnable {
+            override fun run() {
+                handler.postDelayed(this, 1000)
+                mainVM.setNowTime()
+            }
+
+        })
     }
 }

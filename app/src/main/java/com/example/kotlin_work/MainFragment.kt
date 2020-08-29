@@ -8,18 +8,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import okhttp3.OkHttpClient
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class MainFragment : Fragment() {
-    private lateinit var adapter: ArticleAdapter;
+    // private lateinit var adapter: ArticleAdapter;
     private val handler = Handler()
+    private val client = OkHttpClient()
     val mainVM: MainViewModel by viewModels()
+
+    val viewModel: MainViewModel by viewModels( factoryProducer = {
+        object: ViewModelProvider.Factory {
+            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+                return modelClass.getConstructor(
+                    OkHttpClient::class.java
+                ).newInstance(client)
+            }
+        }
+    })
 
     data class Article(val id: Int, val title: String, val body: String)
 
@@ -55,6 +70,11 @@ class MainFragment : Fragment() {
         view.findViewById<Button>(R.id.button_logout).setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_loginFragment)
         }
+
+        // 출근 / 퇴근
+        view.findViewById<Button>(R.id.button_stamping).setOnClickListener {
+            mainVM.doStamping("start")
+        }
         
         // 레이아웃 매니저 세팅
 //        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler) // 리사이클러 뷰를 찾음
@@ -80,6 +100,12 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 에러 회피를 위해 필요함
+        viewModel.responseBody.observe(viewLifecycleOwner, Observer {
+            Toast.makeText(requireContext(),
+                it, Toast.LENGTH_LONG).show()
+        })
 
         val timeTextView = view.findViewById<TextView>(R.id.Time)
         mainVM.timeLiveData.observe(viewLifecycleOwner, Observer {

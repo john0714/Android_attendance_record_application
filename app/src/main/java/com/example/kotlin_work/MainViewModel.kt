@@ -2,15 +2,25 @@ package com.example.kotlin_work
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class MainViewModel(): ViewModel() {
+class MainViewModel(
+    private val client: OkHttpClient
+): ViewModel() {
     val timeLiveData = MutableLiveData<String>()
+    val responseBody = MutableLiveData<String>()
 
     // 로그아웃
     fun logout(email: String, password: String) {
@@ -24,5 +34,37 @@ class MainViewModel(): ViewModel() {
         val time: String? = ZonedDateTime.now(ZoneId.of("Asia/Tokyo")).format(formatter)
 
         timeLiveData.value = time
+    }
+
+    // 출근 / 퇴근
+    fun doStamping(type: String) {
+        viewModelScope.launch {
+            val response = stamping(type)
+            println(response)
+
+            if (response.code != 200) {
+                return@launch
+            }
+        }
+    }
+
+    // 입력
+    private suspend fun stamping(type: String) = withContext(Dispatchers.IO) {
+        val json = JSONObject()
+        json.put("type", type)
+        json.put("timestamp", timeLiveData.value)
+        val body = json.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+
+        // 이거 쓸려면 token이 필요한데, 로그인 했을때 얻는 토큰을 어떻게 여기로 가져와서 사용하지?(질문했음)
+        val request = Request.Builder().apply {
+            post(body)
+            url("https://us-central1-kotlinproject-33677.cloudfunctions.net/add_timestamp")
+        }.build()
+
+        val response = withContext(Dispatchers.IO) {
+            client.newCall(request).execute()
+        }
+
+        response
     }
 }

@@ -37,9 +37,9 @@ class MainViewModel(
     }
 
     // 출근 / 퇴근
-    fun doStamping(type: String) {
+    fun doStamping(type: String, userToken: String) {
         viewModelScope.launch {
-            val response = stamping(type)
+            val response = stamping(type, userToken)
             println(response)
 
             if (response.code != 200) {
@@ -49,13 +49,15 @@ class MainViewModel(
     }
 
     // 입력
-    private suspend fun stamping(type: String) = withContext(Dispatchers.IO) {
+    private suspend fun stamping(type: String, token: String) = withContext(Dispatchers.IO) {
         val json = JSONObject()
         json.put("type", type)
         json.put("timestamp", timeLiveData.value)
         val body = json.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
+        println(token)
 
-        // 이거 쓸려면 token이 필요한데, 로그인 했을때 얻는 토큰을 어떻게 여기로 가져와서 사용하지?(질문했음)
+        // 이거 쓸려면 token이 필요한데, 로그인 했을때 얻는 토큰을 어떻게 여기로 가져와서 사용하지?
+        // SharedPreference를 사용해서 toeken을 가져와야함
         val request = Request.Builder().apply {
             post(body)
             url("https://us-central1-kotlinproject-33677.cloudfunctions.net/add_timestamp")

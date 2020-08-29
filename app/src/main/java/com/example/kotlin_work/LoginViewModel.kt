@@ -18,6 +18,7 @@ class LoginViewModel(
 ): ViewModel() { // このViewModelを破棄すると、処理がキャンセルされる仕組み
     val userLiveData = MutableLiveData<User>()
     val responseBody = MutableLiveData<String>()
+    var userToken: String = ""
 
     // responseTest
     private fun fetch(requestBody: RequestBody) {
@@ -52,7 +53,8 @@ class LoginViewModel(
             }
 
             val token = JSONObject(response.body?.string() ?: "")
-            val user = getUser(token.getString("access_token"))
+            userToken = token.getString("access_token")
+            val user = getUser(userToken)
 
             // ここでUIスレッドが実行される
             // setValue()を使っても大丈夫

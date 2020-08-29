@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,7 @@ class MainFragment : Fragment() {
     // private lateinit var adapter: ArticleAdapter;
     private val handler = Handler()
     private val client = OkHttpClient()
+    private val loginVM: LoginViewModel by activityViewModels()
     val mainVM: MainViewModel by viewModels()
 
     val viewModel: MainViewModel by viewModels( factoryProducer = {
@@ -73,7 +75,7 @@ class MainFragment : Fragment() {
 
         // 출근 / 퇴근
         view.findViewById<Button>(R.id.button_stamping).setOnClickListener {
-            mainVM.doStamping("start")
+            mainVM.doStamping("start", loginVM.userToken)
         }
         
         // 레이아웃 매니저 세팅

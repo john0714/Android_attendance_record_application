@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -19,10 +20,10 @@ import okhttp3.OkHttpClient
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class LoginFragment : Fragment(R.layout.fragment_login) {
-    val vm: LoginViewModel by viewModels()
+    val vm: LoginViewModel by activityViewModels()
     private val client = OkHttpClient()
 
-    val viewModel: LoginViewModel by viewModels( factoryProducer = {
+    val viewModel: LoginViewModel by activityViewModels( factoryProducer = {
         object: ViewModelProvider.Factory {
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return modelClass.getConstructor(

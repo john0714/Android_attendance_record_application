@@ -64,7 +64,6 @@ class LoginViewModel(
 
     // firebaseからトークン取得
     private suspend fun getToken(email: String, password: String) = withContext(Dispatchers.IO) {
-        println("ログイン処理開始")
         val json = JSONObject()
         json.put("email", email)
         json.put("password", password)
@@ -84,10 +83,7 @@ class LoginViewModel(
     
     // token에서 유저정보 취득(원래는 DB에 연결해서 취득해야함)
     private suspend fun getUser(token: String) = withContext(Dispatchers.IO) {
-        println("ユーザー情報取得処理の開始")
-
-        println(token)
-        // 元ならここでDBと繋ぎ、ユーザ情報取得
+        // 元ならここでDBと繋いてユーザ情報取得が、今回は仮のユーザーを使う
         User(id = "user0001", name = "Sample User")
     }
 }

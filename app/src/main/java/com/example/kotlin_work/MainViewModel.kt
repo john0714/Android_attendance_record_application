@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.Credentials
+import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -42,7 +44,7 @@ class MainViewModel(
             val response = stamping(type, userToken)
             println(response)
 
-            if (response.code != 200) {
+            if (response.code != 201) {
                 return@launch
             }
         }
@@ -52,13 +54,13 @@ class MainViewModel(
     private suspend fun stamping(type: String, token: String) = withContext(Dispatchers.IO) {
         val json = JSONObject()
         json.put("type", type)
-        json.put("timestamp", timeLiveData.value)
+        json.put("timestamp", timeLiveData.value.toString().replace(":", ""))
         val body = json.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-        println(token)
+        println(body.toString())
 
-        // 이거 쓸려면 token이 필요한데, 로그인 했을때 얻는 토큰을 어떻게 여기로 가져와서 사용하지?
         // SharedPreference를 사용해서 toeken을 가져와야함
         val request = Request.Builder().apply {
+            addHeader("Authorization", "bearer $token")
             post(body)
             url("https://us-central1-kotlinproject-33677.cloudfunctions.net/add_timestamp")
         }.build()
@@ -66,6 +68,8 @@ class MainViewModel(
         val response = withContext(Dispatchers.IO) {
             client.newCall(request).execute()
         }
+
+        response.close()
 
         response
     }

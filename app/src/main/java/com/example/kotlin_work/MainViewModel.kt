@@ -54,9 +54,8 @@ class MainViewModel(
     private suspend fun stamping(type: String, token: String) = withContext(Dispatchers.IO) {
         val json = JSONObject()
         json.put("type", type)
-        json.put("timestamp", timeLiveData.value.toString().replace(":", ""))
+        json.put("timestamp", timeLiveData.value.toString().replace(":", "").substring(0, 4).toInt())
         val body = json.toString().toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
-        println(body.toString())
 
         // SharedPreference를 사용해서 toeken을 가져와야함
         val request = Request.Builder().apply {

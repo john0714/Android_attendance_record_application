@@ -45,6 +45,7 @@ class MainViewModel(
             println(response)
 
             if (response.code != 201) {
+                println("打刻エラー発生")
                 return@launch
             }
         }
